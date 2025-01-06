@@ -13,10 +13,39 @@ const { NotImplementedError } = require('../extensions/index.js');
  * transform([1, 2, 3, '--discard-prev', 4, 5]) => [1, 2, 4, 5]
  * 
  */
-function transform(/* arr */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function transform(arr) {
+  if (!Array.isArray(arr)) {
+    throw new Error("'arr' parameter must be an instance of the Array!");
+  }
+
+  const arrToChange = [...arr]; 
+  const instructions = ['--double-prev', '--double-next', '--discard-prev', '--discard-next'];
+
+  for (let i = 0; i < arrToChange.length; i++) {
+    const current = arrToChange[i];
+
+  if(current === '--double-prev') {
+    if (i - 1 >= 0 && arrToChange[i - 1] !== '--discard-next') {
+      arrToChange.splice(i, 0, arrToChange[i - 1]);
+      i++;
+    }
+  } else if (current === '--double-next') {
+    if (i + 1 < arrToChange.length) {
+      arrToChange.splice(i + 1, 0, arrToChange[i + 1]); 
+    }
+  }  else if (current === '--discard-prev') {
+    if (i - 1 >= 0 && arrToChange[i - 1] !== '--discard-next') {
+      arrToChange.splice(i - 1, 1); 
+    }
+  } else if (current === '--discard-next') {
+    if (i + 1 < arrToChange.length) {
+      arrToChange.splice(i + 1, 1); 
+    }
+  }
 }
+return arrToChange.filter(el => !instructions.includes(el));
+}
+
 
 module.exports = {
   transform
